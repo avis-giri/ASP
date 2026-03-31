@@ -1,201 +1,698 @@
+% ============================================================
+%  Landscape Assessment: Commercialization Viability Tooling
+%  Professional Report, March 2026
+% ============================================================
 \documentclass[11pt]{article}
-\usepackage[margin=1in]{geometry}
+
+% ---------- ENCODING AND FONTS ----------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+% ---------- PAGE GEOMETRY ----------
+\usepackage[top=0.85in, bottom=0.85in, left=0.95in, right=0.95in]{geometry}
+
+% ---------- COLOR PALETTE ----------
+\usepackage[dvipsnames,table]{xcolor}
+\definecolor{navydark}{HTML}{0C1C35}
+\definecolor{navymid}{HTML}{1A3A5C}
+\definecolor{accentamber}{HTML}{C97B14}
+\definecolor{accentteal}{HTML}{147A82}
+\definecolor{rowlight}{HTML}{F2F6FB}
+\definecolor{headerbg}{HTML}{0C1C35}
+\definecolor{midgray}{HTML}{6B7A90}
+\definecolor{lightborder}{HTML}{C8D4E3}
+\definecolor{calloutbg}{HTML}{EBF2F8}
+\definecolor{calloutborder}{HTML}{147A82}
+\definecolor{amberbg}{HTML}{FEF6E4}
+\definecolor{amberborder}{HTML}{C97B14}
+\definecolor{phasebg}{HTML}{F5F8FC}
+
+% ---------- TABLE AND FIGURE PACKAGES ----------
 \usepackage{graphicx}
 \usepackage{booktabs}
-\usepackage{longtable}
+\usepackage{tabularx}
 \usepackage{array}
-\usepackage{hyperref}
+\usepackage{colortbl}
+\usepackage{longtable}
+\usepackage{ragged2e}
+
+% ---------- LAYOUT AND TYPOGRAPHY ----------
+\usepackage{parskip}
+\usepackage{setspace}
 \usepackage{enumitem}
 \usepackage{titlesec}
-\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{calc}
 
-\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
-\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
-\setlist[itemize]{leftmargin=1.4em}
-\hypersetup{colorlinks=true,urlcolor=blue,linkcolor=black}
+% ---------- CALLOUT BOXES ----------
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
 
-\title{Landscape Assessment: Commercialization Viability Tooling for\newline Venture Capital and University OTM Workflows}
-\author{Prepared for Avi}
-\date{31 March 2026}
+% ---------- LINKS ----------
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  urlcolor=accentteal,
+  linkcolor=navydark,
+  citecolor=navydark,
+  pdftitle={Landscape Assessment: Commercialization Viability Tooling}
+}
 
+% -----------------------------------------------
+%  SECTION TITLE FORMATTING
+% -----------------------------------------------
+\titleformat{\section}
+  {\large\bfseries\color{navydark}}
+  {\thesection}{0.6em}{}
+  [\vspace{3pt}\textcolor{accentteal}{\titlerule[1.4pt]}\vspace{4pt}]
+
+\titleformat{\subsection}
+  {\normalsize\bfseries\color{navymid}}
+  {\thesubsection}{0.5em}{}
+
+\titlespacing{\section}{0pt}{20pt}{8pt}
+\titlespacing{\subsection}{0pt}{14pt}{5pt}
+
+% -----------------------------------------------
+%  LIST FORMATTING
+% -----------------------------------------------
+\setlist[itemize]{leftmargin=1.6em, itemsep=3pt, parsep=0pt, topsep=5pt}
+\setlist[enumerate]{leftmargin=1.6em, itemsep=3pt, parsep=0pt, topsep=5pt}
+
+% -----------------------------------------------
+%  HEADER AND FOOTER
+% -----------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\small\textcolor{midgray}{\textit{Confidential}}}
+\fancyhead[R]{\small\textcolor{midgray}{Commercialization Viability Tooling -- Landscape Assessment}}
+\fancyfoot[C]{\small\textcolor{midgray}{\thepage}}
+
+% -----------------------------------------------
+%  CUSTOM COLUMN TYPES
+% -----------------------------------------------
+\newcolumntype{L}[1]{>{\RaggedRight\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+% -----------------------------------------------
+%  TABLE DEFAULTS
+% -----------------------------------------------
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.60}
+\arrayrulecolor{lightborder}
+\setlength{\LTpre}{4pt}
+\setlength{\LTpost}{8pt}
+
+% -----------------------------------------------
+%  TCOLORBOX STYLES
+% -----------------------------------------------
+
+% Teal-border insight block
+\newtcolorbox{insightbox}{
+  enhanced, breakable,
+  colback=calloutbg,
+  colframe=calloutborder,
+  leftrule=3.5pt, toprule=0pt, bottomrule=0pt, rightrule=0pt,
+  boxsep=4pt, left=10pt, right=10pt, top=9pt, bottom=9pt
+}
+
+% Amber-border conclusion block
+\newtcolorbox{opportunitybox}{
+  enhanced, breakable,
+  colback=amberbg,
+  colframe=amberborder,
+  leftrule=3.5pt, toprule=0pt, bottomrule=0pt, rightrule=0pt,
+  boxsep=4pt, left=10pt, right=10pt, top=9pt, bottom=9pt
+}
+
+% Titled phase block for build roadmap
+\newtcolorbox{phasebox}[1]{
+  enhanced, breakable,
+  colback=phasebg,
+  colframe=navymid,
+  boxrule=0.6pt,
+  arc=3pt,
+  title={\textbf{#1}},
+  fonttitle=\small\bfseries\color{white},
+  coltitle=white,
+  attach boxed title to top left={yshift=-2.5mm, xshift=10pt},
+  boxed title style={
+    colback=navymid,
+    colframe=navymid,
+    boxrule=0pt,
+    arc=2pt
+  },
+  top=12pt, left=10pt, right=10pt, bottom=9pt
+}
+
+% -----------------------------------------------
+%  LOGO HELPER
+% -----------------------------------------------
+\newcommand{\logoimg}[1]{%
+  \raisebox{-0.32\height}%
+    {\includegraphics[width=1.65cm, height=0.95cm, keepaspectratio]{#1}}%
+}
+
+% ============================================================
 \begin{document}
-\maketitle
+\thispagestyle{empty}
 
+% ============================================================
+%  TITLE BLOCK
+% ============================================================
+\begin{tcolorbox}[
+  enhanced,
+  colback=navydark,
+  colframe=navydark,
+  boxrule=0pt, arc=0pt,
+  left=20pt, right=20pt, top=20pt, bottom=20pt
+]
+  {\color{white}\footnotesize\bfseries\MakeUppercase{Confidential -- Internal Strategy Document}%
+   \hfill 31 March 2026}\\[10pt]
+  {\color{white}\LARGE\bfseries
+    Landscape Assessment:\\[5pt]
+    Commercialization Viability Tooling for\\[4pt]
+    Venture Capital and University OTM Workflows}\\[10pt]
+  \textcolor{accentamber}{\rule{\linewidth}{1.8pt}}\\[8pt]
+  {\color{white}\small
+    Technology Transfer Markets
+    \enspace\textcolor{accentamber}{\textbullet}\enspace
+    Deep-Tech Diligence Infrastructure
+    \enspace\textcolor{accentamber}{\textbullet}\enspace
+    University IP Commercialization
+  }
+\end{tcolorbox}
+
+\vspace{6pt}
+
+% ============================================================
 \section{Purpose and Scope}
-This report maps the current tool landscape used by:
+
+This report maps the current tool landscape serving two distinct but intersecting
+markets:
 \begin{itemize}
-    \item Venture Capital firms for startup screening and diligence, and
-    \item University Offices of Technology Management (OTM/TTO) for invention intake, IP operations, and commercialization decisions.
+  \item \textbf{Venture Capital firms} -- startup discovery, screening, and
+        technical diligence for deep-tech and university-origin investments.
+  \item \textbf{University Offices of Technology Management (OTM/TTO)} --
+        invention disclosure intake, IP operations, licensing strategy, and
+        commercialization triage decisions.
 \end{itemize}
 
-The report identifies where current platforms stop, where process gaps remain, and where a dedicated commercialization viability platform can intervene with a defensible product position.
+The analysis identifies where current platforms reach their functional limits,
+where structural process gaps remain unaddressed, and where a purpose-built
+commercialization viability platform can claim a defensible and differentiated
+product position.
 
+% ============================================================
 \section{Executive Findings}
-\begin{itemize}
-    \item The market is segmented. VC teams and OTM teams assemble multiple tools across CRM, market intelligence, patent analytics, publication intelligence, and compliance systems.
-    \item No reviewed production platform provides one native workflow that combines: patent intelligence, scientific evidence quality, market sizing, competitor mapping, and commercialization viability scoring.
-    \item OTM commercialization triage is still human-led at critical decision points, including assignment, patent filing decisions, licensing path decisions, and conflict review.
-    \item The strongest intervention point is a governance-grade decision engine that integrates into existing OTM systems and outputs investor-ready diligence artifacts.
-\end{itemize}
 
-\section{Detailed Scoping: Venture Capital Tooling}
+\begin{insightbox}
+\begin{enumerate}[leftmargin=1.4em, itemsep=5pt]
+  \item[\textbf{1.}] \textbf{The market is fragmented by design.}
+        VC and OTM teams each assemble heterogeneous tool stacks spanning CRM,
+        market intelligence, patent analytics, publication retrieval, and
+        compliance systems, with no native integrating layer connecting them.
 
-\subsection{Representative Platforms}
-\begin{longtable}{p{0.14\textwidth} p{0.11\textwidth} p{0.23\textwidth} p{0.21\textwidth} p{0.25\textwidth}}
-\toprule
-\textbf{Logo} & \textbf{Platform} & \textbf{Primary Use in VC Workflow} & \textbf{Strengths} & \textbf{Observed Gap Relative to Target Product} \\
-\midrule
-\endhead
-\includegraphics[width=0.11\textwidth]{report_assets/cbinsights.png} & CB Insights & Private company discovery, market and competitor intelligence, predictive indicators & Broad company and market signal coverage; widely used by investment and strategy teams & Limited evidence-quality scoring at publication level and no integrated claim-level IP + scientific + commercialization score in one workflow \\
+  \item[\textbf{2.}] \textbf{No production platform closes the full loop.}
+        No reviewed tool combines patent claim analysis, scientific evidence
+        quality grading, market sizing, competitor mapping, and a composite
+        commercialization viability score within a single decision workflow.
 
-\includegraphics[width=0.11\textwidth]{report_assets/dealroom.png} & Dealroom & Startup and ecosystem discovery, tracking, exports and workflow feeds & Useful for ecosystem mapping and company tracking & Not designed as a science quality and patent-depth commercialization scoring engine \\
+  \item[\textbf{3.}] \textbf{OTM triage remains manually bottlenecked.}
+        Critical decisions -- patent filing, licensing path selection, case
+        assignment, conflict-of-interest review -- are made without systematic
+        scoring or auditable decision infrastructure.
 
-\includegraphics[width=0.11\textwidth]{report_assets/tracxn.png} & Tracxn & Startup and investor dataset platform with workflow support & Strong taxonomy and discovery support for sectors and firms & Data-centric platform, not an integrated university deep-tech viability scoring platform \\
+  \item[\textbf{4.}] \textbf{The intervention point is structurally clear.}
+        A governance-grade decision engine that integrates into existing OTM
+        systems and produces investor-ready diligence outputs represents the
+        highest-leverage position available in the current stack.
+\end{enumerate}
+\end{insightbox}
 
-\includegraphics[width=0.11\textwidth]{report_assets/patsnap.png} & PatSnap & Patent intelligence and technology landscape analysis & Strong IP analytics and portfolio-level patent visibility & Not a full system for market sizing, scientific evidence quality grading, and end-to-end commercialization scoring \\
+% ============================================================
+\section{Venture Capital Tooling: Detailed Scoping}
 
-\includegraphics[width=0.11\textwidth]{report_assets/clarivate.png} & Clarivate Derwent & Patent portfolio analytics, prosecution and citation context & Strong IP and legal intelligence depth & Oriented to IP analytics, not integrated with investor-market and science-quality scoring in one decision stack \\
+\subsection{Platform Survey}
 
-\includegraphics[width=0.11\textwidth]{report_assets/lens.png} & Lens & Scholarly and patent discovery and link analysis & Good patent-literature linkage and broad discovery coverage & Requires analyst interpretation; no native commercialization decision score workflow \\
+The table below surveys representative platforms deployed across VC workflows,
+with an assessment of each platform's primary function and the gap it leaves
+relative to a purpose-built commercialization viability system.
 
-\includegraphics[width=0.11\textwidth]{report_assets/cas.png} & CAS SciFinder & Scientific and patent intelligence, especially in chemistry and life sciences & Deep domain retrieval quality for scientific intelligence & Research intelligence layer only; not an OTM or VC commercialization execution system \\
-\bottomrule
+\vspace{4pt}
+
+\begin{longtable}{C{1.8cm} L{2.1cm} L{4.5cm} L{3.4cm} L{4.2cm}}
+
+  % Header -- first page
+  \rowcolor{headerbg}
+  \textcolor{white}{\textbf{Logo}} &
+  \textcolor{white}{\textbf{Platform}} &
+  \textcolor{white}{\textbf{Primary Function in VC Workflow}} &
+  \textcolor{white}{\textbf{Strengths}} &
+  \textcolor{white}{\textbf{Gap vs.\ Target Product}} \\[2pt]
+  \endfirsthead
+
+  % Header -- continuation pages
+  \rowcolor{headerbg}
+  \textcolor{white}{\textbf{Logo}} &
+  \textcolor{white}{\textbf{Platform}} &
+  \textcolor{white}{\textbf{Primary Function in VC Workflow}} &
+  \textcolor{white}{\textbf{Strengths}} &
+  \textcolor{white}{\textbf{Gap vs.\ Target Product}} \\[2pt]
+  \endhead
+
+  \rowcolor{rowlight}
+  \logoimg{report_assets/cbinsights.png} &
+  \textbf{CB Insights} &
+  Private company discovery, market intelligence, predictive investor
+  signals, sector competitor mapping &
+  Broad company and market signal coverage; widely adopted by investment
+  and strategy teams &
+  No claim-level IP scoring, no scientific evidence quality grading,
+  no integrated commercialization viability workflow \\
+
+  \logoimg{report_assets/dealroom.png} &
+  \textbf{Dealroom} &
+  Startup and ecosystem discovery, company tracking, round history,
+  data exports &
+  Strong ecosystem mapping, round-by-round company activity, and
+  investor network visualization &
+  Not built as a science-quality or patent-depth scoring system; no
+  university commercialization integration \\
+
+  \rowcolor{rowlight}
+  \logoimg{report_assets/tracxn.png} &
+  \textbf{Tracxn} &
+  Startup database platform, investor dataset, sector taxonomy and
+  discovery workflow &
+  Strong sector taxonomy and firm-level discovery; useful for deal
+  sourcing across defined verticals &
+  Data-centric sourcing platform; not an integrated deep-tech viability
+  or evidence scoring system \\
+
+  \logoimg{report_assets/patsnap.png} &
+  \textbf{PatSnap} &
+  Patent intelligence, freedom-to-operate analysis, technology
+  landscape and portfolio mapping &
+  Strong IP analytics and portfolio-level patent visibility for
+  investment and R\&D teams &
+  IP layer only; does not integrate market sizing, scientific publication
+  quality grading, or end-to-end commercialization scoring \\
+
+  \rowcolor{rowlight}
+  \logoimg{report_assets/clarivate.png} &
+  \textbf{Clarivate /\newline Derwent} &
+  Patent portfolio analytics, prosecution context, forward and
+  backward citation analysis &
+  Deep IP and legal intelligence; industry standard for patent
+  prosecution and landscape work &
+  No native investor-market scoring or science-evidence quality grading
+  in the same decision stack \\
+
+  \logoimg{report_assets/lens.png} &
+  \textbf{Lens.org} &
+  Scholarly and patent discovery, patent-to-literature link analysis,
+  open-access indexing &
+  Broad patent-to-literature linkage with strong API coverage and no
+  cost barrier for base queries &
+  Requires analyst interpretation; no native commercialization decision
+  scoring or structured workflow output \\
+
+  \rowcolor{rowlight}
+  \logoimg{report_assets/cas.png} &
+  \textbf{CAS SciFinder} &
+  Scientific and patent intelligence, especially for chemistry
+  and life sciences &
+  High-quality domain-specific document retrieval; widely used for
+  chemical structure and substance search &
+  Research intelligence retrieval only; not an OTM or VC
+  commercialization execution system \\[4pt]
+
 \end{longtable}
 
-\subsection{VC Workflow Conclusion}
-VC tooling is mature in components but not in integrated decision synthesis for university-origin deep tech. Teams still stitch outputs manually across data products, IP tools, and technical diligence providers.
+\subsection{VC Tooling: Conclusion}
 
-\section{Detailed Scoping: OTM/TTO Tooling Across Universities}
+\begin{opportunitybox}
+  VC tooling is functionally mature in isolated components. Teams continue to
+  manually combine outputs across market data products, IP tools, and external
+  technical diligence providers. No production system synthesizes these inputs
+  into a traceable, scored commercialization verdict for university-origin
+  deep tech.
+\end{opportunitybox}
 
-\subsection{Representative Platforms and Infrastructure}
-\begin{longtable}{p{0.14\textwidth} p{0.11\textwidth} p{0.23\textwidth} p{0.21\textwidth} p{0.25\textwidth}}
-\toprule
-\textbf{Logo} & \textbf{Platform} & \textbf{Primary Use in OTM Workflow} & \textbf{Strengths} & \textbf{Observed Gap Relative to Target Product} \\
-\midrule
-\endhead
-\includegraphics[width=0.11\textwidth]{report_assets/inteum.png} & Inteum Minuet & Disclosure intake, docketing, agreements, portfolio and compliance workflow support & Strong system-of-record capabilities for TTO operations and process control & AI features are assistive; does not replace commercialization triage with integrated market plus science plus IP scoring \\
+% ============================================================
+\section{OTM/TTO Tooling: Detailed Scoping}
 
-\includegraphics[width=0.11\textwidth]{report_assets/wellspring.png} & Wellspring & Innovation and IP workflow support for transfer offices and institutions & Established presence in innovation management category & Publicly visible detail indicates platform breadth, but no evidence of full automated commercialization viability scoring stack \\
+\subsection{Platform Survey}
 
-\includegraphics[width=0.11\textwidth]{report_assets/autm.png} & AUTM STATT / TransACT & Benchmarking data and transaction support references for member institutions & Valuable benchmarking and precedent support for negotiations & Not an operational workflow system and not a real-time triage decision engine \\
+\vspace{4pt}
 
-\includegraphics[width=0.11\textwidth]{report_assets/inpart.png} & IN-PART & University to industry opportunity discovery and partner matching & Improves external partner reach and campaign visibility & Upstream quality filter and internal commercialization scoring still required before outreach \\
+\begin{longtable}{C{1.8cm} L{2.1cm} L{4.5cm} L{3.4cm} L{4.2cm}}
 
-\includegraphics[width=0.11\textwidth]{report_assets/firstignite.png} & FirstIgnite & AI-assisted partner matching for licensing and sponsored research leads & Useful for external match discovery & Not a replacement for IP compliance systems, prosecution decisions, or committee-level commercialization scoring \\
-\bottomrule
+  \rowcolor{headerbg}
+  \textcolor{white}{\textbf{Logo}} &
+  \textcolor{white}{\textbf{Platform}} &
+  \textcolor{white}{\textbf{Primary Function in OTM Workflow}} &
+  \textcolor{white}{\textbf{Strengths}} &
+  \textcolor{white}{\textbf{Gap vs.\ Target Product}} \\[2pt]
+  \endfirsthead
+
+  \rowcolor{headerbg}
+  \textcolor{white}{\textbf{Logo}} &
+  \textcolor{white}{\textbf{Platform}} &
+  \textcolor{white}{\textbf{Primary Function in OTM Workflow}} &
+  \textcolor{white}{\textbf{Strengths}} &
+  \textcolor{white}{\textbf{Gap vs.\ Target Product}} \\[2pt]
+  \endhead
+
+  \rowcolor{rowlight}
+  \logoimg{report_assets/inteum.png} &
+  \textbf{Inteum /\newline Minuet} &
+  Disclosure intake, IP docketing, agreements management,
+  portfolio and compliance tracking &
+  Strong system-of-record capabilities for TTO operations;
+  established institutional adoption &
+  Workflow features are assistive; no integrated market,
+  science-quality, or IP viability scoring stack \\
+
+  \logoimg{report_assets/wellspring.png} &
+  \textbf{Wellspring} &
+  Innovation and IP workflow management for transfer offices
+  and research institutions &
+  Established presence in innovation management; covers broad
+  workflow touchpoints for OTM teams &
+  No published evidence of full automated commercialization
+  viability scoring at claim or evidence level \\
+
+  \rowcolor{rowlight}
+  \logoimg{report_assets/autm.png} &
+  \textbf{AUTM STATT /\newline TransACT} &
+  Industry benchmarking data and transaction precedent
+  references for member institutions &
+  Valuable benchmarking and negotiation precedent for OTMs
+  and tech transfer professionals &
+  Reference and benchmarking resource only; not an operational
+  scoring or triage workflow system \\
+
+  \logoimg{report_assets/inpart.png} &
+  \textbf{IN-PART} &
+  University-to-industry opportunity matching and technology
+  licensing partner visibility &
+  Improves external partner reach and broadens campaign
+  visibility for technology marketing efforts &
+  Internal commercialization quality scoring and IP triage
+  still required before meaningful outreach \\
+
+  \rowcolor{rowlight}
+  \logoimg{report_assets/firstignite.png} &
+  \textbf{FirstIgnite} &
+  Algorithmic partner matching for licensing opportunities
+  and sponsored research lead generation &
+  Useful for external match discovery and outreach
+  prioritization across industry verticals &
+  Does not address IP compliance, prosecution decisions, or
+  committee-level commercialization scoring \\[4pt]
+
 \end{longtable}
 
 \subsection{Regulatory and Process Baseline}
-US universities handling federally funded inventions must comply with Bayh-Dole reporting through iEdison and associated regulatory timelines. These obligations reinforce structured operations but do not provide commercialization scoring or investor-grade viability analysis.
 
-\section{Evidence of Manual Commercialization Triage}
-Observed workflow evidence from university process documentation indicates manual decision points remain central:
+US universities managing federally funded inventions operate under Bayh-Dole Act
+obligations, including mandatory disclosure, election-of-title timelines, and
+iEdison reporting through NIST. These compliance requirements enforce structured
+intake processes but provide no commercialization scoring, market validation, or
+investor-grade viability output at any stage of the disclosure-to-license
+workflow.
+
+% ============================================================
+\section{Where the Current System Breaks Down}
+
+Documented OTM workflow evidence confirms that manual judgment remains the
+deciding factor at every high-stakes point in the commercialization process:
+
 \begin{enumerate}
-    \item Case assignment to licensing managers.
-    \item Human judgment on patent filing and continuation decisions.
-    \item Human selection of licensing strategy and negotiation posture.
-    \item Conflict-of-interest and governance review before deal execution.
-    \item Manual prioritization due to low disclosure-to-license conversion rates.
+  \item \textbf{Case assignment} to licensing managers, based primarily on
+        domain familiarity and available capacity.
+  \item \textbf{Patent filing and prosecution decisions} made without
+        standardized readiness thresholds or comparative market evidence.
+  \item \textbf{Licensing strategy selection} -- exclusive vs.\ non-exclusive,
+        startup spinout vs.\ established partner -- driven by individual manager
+        judgment rather than evidence-backed scoring.
+  \item \textbf{Conflict-of-interest and governance review} prior to deal
+        execution, with no standardized record of the decision rationale.
+  \item \textbf{Disclosure prioritization} under resource constraints, with no
+        systematic scoring to guide sequencing across a live portfolio.
 \end{enumerate}
 
-This is the critical operational gap where automation can improve consistency and speed without removing accountable human oversight.
+\vspace{4pt}
+\begin{insightbox}
+  \textbf{This is the structural gap.} Systematic scoring and structured evidence
+  packaging can improve decision consistency and processing speed without
+  displacing accountable human oversight at final decision gates.
+\end{insightbox}
 
-\section{Gap Taxonomy and Intervention Opportunities}
-\subsection{Gap Taxonomy}
+% ============================================================
+\section{Gap Taxonomy and Intervention Design}
+
+\subsection{Six Structural Gaps in the Current Stack}
+
+\vspace{4pt}
+\renewcommand{\arraystretch}{1.65}
+\begin{tabularx}{\linewidth}{L{3.1cm} X}
+  \rowcolor{headerbg}
+  \textcolor{white}{\textbf{Gap}} &
+  \textcolor{white}{\textbf{Description}} \\
+
+  \rowcolor{rowlight}
+  \textbf{Workflow\newline fragmentation} &
+  VC and OTM systems operate in parallel silos with no shared decision layer or
+  structured handoff between university triage and downstream investor diligence. \\
+
+  \textbf{Readiness\newline framework} &
+  TRL status views exist in some systems, but composite multi-dimensional
+  commercialization readiness scores are not standardized or auditable across
+  institutions or asset classes. \\
+
+  \rowcolor{rowlight}
+  \textbf{Evidence\newline normalization} &
+  Disclosures, patent claims, scientific publications, and market data are
+  ingested through separate systems and never converged into a single traceable
+  evidence model. \\
+
+  \textbf{Benchmarking} &
+  Sparse external baselines exist for university-stage assets by domain and
+  development stage, preventing calibrated scoring and comparative portfolio
+  assessment. \\
+
+  \rowcolor{rowlight}
+  \textbf{Governance} &
+  No production system maintains versioned decision logs, override documentation,
+  or auditable scoring histories for disclosure-to-commercialization decisions. \\
+
+  \textbf{Actionability} &
+  Existing platforms do not prescribe prioritized de-risking actions tied to
+  expected commercialization score improvement, leaving licensing managers to
+  determine next steps without structured guidance. \\[4pt]
+\end{tabularx}
+\renewcommand{\arraystretch}{1.60}
+
+\subsection{Product Positioning}
+
+\begin{insightbox}
+  \textbf{Core thesis:} Build a commercialization viability decision engine that
+  sits between OTM systems of record and downstream investor or partner diligence
+  workflows. The platform ingests multi-source evidence -- patents, publications,
+  market data, regulatory signals -- and produces explainable, structured
+  commercialization verdicts with a complete audit trail.
+\end{insightbox}
+
+\textbf{Primary outputs delivered by the platform:}
 \begin{itemize}
-    \item \textbf{Workflow fragmentation gap}: VC and OTM systems are not connected by a shared decision layer.
-    \item \textbf{Readiness framework gap}: TRL or status views are common, but composite commercialization readiness scoring is not standardized.
-    \item \textbf{Evidence normalization gap}: disclosures, patents, literature, and market data are not converted into one traceable evidence model.
-    \item \textbf{Benchmarking gap}: sparse comparative baselines for university-stage assets by domain and stage.
-    \item \textbf{Governance gap}: limited versioned decision logs, override reasoning, and auditable scoring histories.
-    \item \textbf{Actionability gap}: few systems prescribe next de-risking actions with expected impact and effort.
+  \item Explainable composite viability score with confidence level and
+        per-dimension breakdown.
+  \item Citation-backed evidence map spanning IP defensibility, scientific
+        evidence quality, market sizing, and competitive landscape.
+  \item Prioritized de-risking action plan with expected score delta per action.
+  \item Committee-grade decision packet with version history and override log.
 \end{itemize}
 
-\subsection{Intervention Model}
-\textbf{Positioning:} Build a commercialization viability decision engine that sits between OTM systems of record and downstream investor or partner diligence workflows.
-
-\textbf{Core outputs:}
-\begin{itemize}
-    \item Explainable composite viability score with confidence level.
-    \item Citation-backed evidence map covering IP, science quality, market and competition.
-    \item Prioritized de-risking action plan with expected score lift.
-    \item Committee-grade decision packet and audit trail.
-\end{itemize}
-
+% ============================================================
 \section{Phased Build Plan}
-\subsection{MVP (0 to 4 months)}
-\begin{itemize}
-    \item Read-only connectors to one OTM source plus CSV fallback.
-    \item Scoring ontology across technical maturity, market validation, IP defensibility, regulatory path, scale feasibility, and team readiness.
-    \item Evidence extraction with source traceability and confidence flags.
-    \item One-page commercialization brief and structured appendix.
-\end{itemize}
 
-\subsection{Phase 2 (5 to 10 months)}
-\begin{itemize}
-    \item Bidirectional workflow integration with selected OTM stack.
-    \item Benchmarking by domain and development stage.
-    \item Portfolio triage cockpit and decision governance module.
-\end{itemize}
+\vspace{6pt}
 
-\subsection{Phase 3 (11 to 18 months)}
+\begin{phasebox}{Phase 1: MVP \normalfont\textcolor{midgray}{\small -- Months 0 to 4}}
 \begin{itemize}
-    \item Cross-institution benchmark intelligence with privacy controls.
-    \item Predictive conversion modeling for license and startup progression.
-    \item Counterparty-ready diligence outputs for VC and strategic partners.
+  \item Read-only data connectors to one OTM source system, with CSV ingestion
+        fallback for institutions not yet integrated.
+  \item Scoring framework covering: technical maturity, market demand validation,
+        IP defensibility, regulatory pathway clarity, scale feasibility, and
+        team capability.
+  \item Evidence extraction with source traceability and confidence-level flags
+        on all scored dimensions.
+  \item Output: one-page commercialization brief with supporting structured
+        evidence appendix.
 \end{itemize}
+\end{phasebox}
 
-\section{Risk Register and Mitigation}
-\begin{longtable}{p{0.29\textwidth} p{0.31\textwidth} p{0.34\textwidth}}
-\toprule
-\textbf{Risk} & \textbf{Operational Impact} & \textbf{Mitigation} \\
-\midrule
-\endhead
-Model credibility risk & Low trust in score outputs & Explainable scoring components, citation traceability, domain calibration reviews \\
-Data quality heterogeneity & Inconsistent assessments & Confidence levels, minimum data thresholds, ingestion quality checks \\
-Institutional adoption friction & Slow rollout and low usage & Shadow mode pilot, human final signoff, configurable rubric weights \\
-Security and confidentiality exposure & Legal and reputational impact & Tenant isolation, encryption, RBAC, contractual data boundaries, audit logging \\
-Integration dependency changes & Workflow breaks and maintenance cost & Adapter architecture, fallback import paths, connector monitoring \\
-\bottomrule
+\vspace{10pt}
+
+\begin{phasebox}{Phase 2: Platform Integration \normalfont\textcolor{midgray}{\small -- Months 5 to 10}}
+\begin{itemize}
+  \item Bidirectional workflow integration with the primary OTM stack in use at
+        the pilot institution.
+  \item Benchmarking module by technology domain and development stage.
+  \item Portfolio triage interface with prioritization queues and decision
+        governance controls for committee review.
+\end{itemize}
+\end{phasebox}
+
+\vspace{10pt}
+
+\begin{phasebox}{Phase 3: Network Intelligence \normalfont\textcolor{midgray}{\small -- Months 11 to 18}}
+\begin{itemize}
+  \item Cross-institution benchmark intelligence with institutional privacy
+        controls and configurable data sharing boundaries.
+  \item Predictive conversion modeling for license and startup progression
+        outcomes based on scored evidence vectors.
+  \item Counterparty-ready diligence output packages formatted for VC and
+        strategic partner workflows.
+\end{itemize}
+\end{phasebox}
+
+% ============================================================
+\section{Risk Register}
+
+\vspace{4pt}
+
+\begin{longtable}{L{3.6cm} L{3.9cm} L{5.6cm}}
+
+  \rowcolor{headerbg}
+  \textcolor{white}{\textbf{Risk}} &
+  \textcolor{white}{\textbf{Operational Impact}} &
+  \textcolor{white}{\textbf{Mitigation}} \\[2pt]
+  \endfirsthead
+
+  \rowcolor{headerbg}
+  \textcolor{white}{\textbf{Risk}} &
+  \textcolor{white}{\textbf{Operational Impact}} &
+  \textcolor{white}{\textbf{Mitigation}} \\[2pt]
+  \endhead
+
+  \rowcolor{rowlight}
+  Score credibility &
+  Low institutional trust in outputs; resistance at decision gates &
+  Per-dimension scoring with confidence intervals; domain calibration
+  sessions with TTO partners before launch \\
+
+  Data quality heterogeneity &
+  Inconsistent evidence coverage producing score variance across institutions &
+  Minimum data adequacy thresholds, confidence floor gates, and ingestion
+  quality audit flags before scoring runs \\
+
+  \rowcolor{rowlight}
+  Institutional adoption friction &
+  Slow initial rollout; low engagement from licensing managers &
+  Shadow-mode pilot operation with scoring visible only to the project
+  team for the first 12 weeks; human final authority preserved throughout \\
+
+  Confidentiality and security exposure &
+  Legal liability and reputational risk for partner institutions &
+  Tenant isolation, end-to-end encryption, role-based access controls,
+  contractual data boundary agreements, full audit logging \\
+
+  \rowcolor{rowlight}
+  Integration dependency changes &
+  Workflow disruption when upstream OTM platforms update APIs or schemas &
+  Adapter-pattern connector architecture, CSV fallback paths, proactive
+  API monitoring, versioned connector releases \\[4pt]
+
 \end{longtable}
 
+% ============================================================
 \section{Recommended Pilot Design}
+
+\textbf{Target site:} One research-intensive university OTM, co-piloting with one
+affiliated translational funding committee.
+
+\vspace{6pt}
+
+\renewcommand{\arraystretch}{1.6}
+\begin{tabularx}{\linewidth}{L{3.6cm} X}
+  \rowcolor{headerbg}
+  \textcolor{white}{\textbf{Parameter}} &
+  \textcolor{white}{\textbf{Detail}} \\
+
+  \rowcolor{rowlight}
+  Cohort size &
+  80 to 120 treatment disclosures with matched historical baseline for
+  controlled comparison \\
+
+  Duration &
+  Minimum two quarters; target nine months to capture the full
+  disclosure-to-decision cycle \\
+
+  \rowcolor{rowlight}
+  Evaluation mode &
+  Shadow mode in weeks 1 to 12 (scoring runs silently); active mode from
+  month 4 with scoring visible to licensing managers \\[4pt]
+\end{tabularx}
+\renewcommand{\arraystretch}{1.60}
+
+\vspace{10pt}
+\textbf{Primary success metrics:}
 \begin{itemize}
-    \item \textbf{Pilot site:} one research university, OTM plus one translational funding committee.
-    \item \textbf{Cohorts:} 80 to 120 treatment disclosures with matched baseline comparison.
-    \item \textbf{Duration:} minimum two quarters, target nine months.
+  \item Reduction in median cycle time from disclosure receipt to triage decision.
+  \item Improvement in inter-reviewer consistency across scored readiness
+        dimensions.
+  \item Evidence completeness rate at the point of licensing strategy decision.
+  \item Share of cases with an explicit, documented de-risking action plan.
+  \item Early-stage conversion lift to formal license negotiation or startup
+        diligence gate.
 \end{itemize}
 
-\textbf{Primary KPIs}
-\begin{itemize}
-    \item Median cycle time from disclosure to triage decision.
-    \item Inter-reviewer consistency on readiness dimensions.
-    \item Evidence completeness at decision point.
-    \item Share of cases with explicit de-risking action plans.
-    \item Early conversion lift to license or startup diligence gate.
-\end{itemize}
-
+% ============================================================
 \section{Conclusion}
-Your working thesis is supported by market evidence. Current tools are capable in isolated functions but do not deliver integrated commercialization viability assessment for university-origin technologies. A product that combines explainable scoring, evidence traceability, governance controls, and workflow integration can address an operationally real gap for both OTM offices and deep-tech investors.
 
+The evidence in this report supports the core product thesis. The market for
+university-origin deep-tech commercialization tooling is large and not well
+served. Existing platforms are capable in narrow verticals -- IP analytics,
+market data, OTM workflow management -- but none deliver integrated
+commercialization viability assessment that combines patent intelligence,
+scientific evidence quality, market sizing, and governance-grade decision
+infrastructure in a single product.
+
+\vspace{6pt}
+\begin{opportunitybox}
+  A platform that combines explainable viability scoring, traceable evidence
+  packaging, governance infrastructure, and bidirectional OTM workflow integration
+  addresses a real and persistent operational gap for both university technology
+  transfer offices and the deep-tech investors who depend on their output.
+\end{opportunitybox}
+
+% ============================================================
 \section*{References}
 \small
+\setlist[itemize]{leftmargin=1.4em, itemsep=2pt, topsep=4pt}
 \begin{itemize}
-    \item CB Insights platform and pricing pages: \url{https://www.cbinsights.com/what-we-offer/platform/}, \url{https://www.cbinsights.com/what-we-offer/pricing/}
-    \item Dealroom platform and pricing: \url{https://dealroom.co/platform}, \url{https://dealroom.co/pricing/}
-    \item Tracxn pricing: \url{https://tracxn.com/pricing}
-    \item PatSnap investor solutions: \url{https://www.patsnap.com/solutions/business-solutions/investor-solutions/}
-    \item Clarivate Derwent analytics: \url{https://clarivate.com/intellectual-property/derwent/patent-analytics/}
-    \item Lens platform: \url{https://www.lens.org/}
-    \item CAS SciFinder: \url{https://www.cas.org/solutions/cas-scifinder-discovery-platform}
-    \item Inteum and Minuet pages: \url{https://www.inteum.com/}, \url{https://www.inteum.com/minuet/}
-    \item Wellspring pages: \url{https://www.wellspring.com/}, \url{https://www.wellspring.com/customers}
-    \item AUTM databases: \url{https://autm.net/surveys-and-tools/databases}
-    \item NIST iEdison: \url{https://www.nist.gov/iedison}
-    \item eCFR 37 CFR 401.14: \url{https://www.ecfr.gov/current/title-37/chapter-IV/part-401/section-401.14}
-    \item IN-PART for universities: \url{https://in-part.com/for-universities/}
-    \item Stanford OTL process and TechFinder: \url{https://otl.stanford.edu/researchers/otls-process}, \url{https://techfinder.stanford.edu}
-    \item FirstIgnite universities: \url{https://www.firstignite.com/universities/}
+  \item CB Insights platform: \url{https://www.cbinsights.com/what-we-offer/platform/}
+  \item Dealroom platform: \url{https://dealroom.co/platform}
+  \item Tracxn: \url{https://tracxn.com/pricing}
+  \item PatSnap -- investor solutions: \url{https://www.patsnap.com/solutions/business-solutions/investor-solutions/}
+  \item Clarivate Derwent analytics: \url{https://clarivate.com/intellectual-property/derwent/patent-analytics/}
+  \item Lens.org: \url{https://www.lens.org/}
+  \item CAS SciFinder Discovery Platform: \url{https://www.cas.org/solutions/cas-scifinder-discovery-platform}
+  \item Inteum / Minuet: \url{https://www.inteum.com/minuet/}
+  \item Wellspring: \url{https://www.wellspring.com/}
+  \item AUTM databases: \url{https://autm.net/surveys-and-tools/databases}
+  \item NIST iEdison / Bayh-Dole compliance: \url{https://www.nist.gov/iedison}
+  \item 37 CFR 401.14: \url{https://www.ecfr.gov/current/title-37/chapter-IV/part-401/section-401.14}
+  \item IN-PART for universities: \url{https://in-part.com/for-universities/}
+  \item Stanford OTL process: \url{https://otl.stanford.edu/researchers/otls-process}
+  \item FirstIgnite: \url{https://www.firstignite.com/universities/}
 \end{itemize}
 
 \end{document}
